@@ -37,7 +37,6 @@ post_db = [
     Timestamp(id=1, timestamp=10)
 ]
 
-
 @app.get('/')
 def root():
     return 'Polyakov Egor'
