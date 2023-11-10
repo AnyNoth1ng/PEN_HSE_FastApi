@@ -54,6 +54,7 @@ def Get_dogs_kind(value: str):
             l.append(dogs_db[i])
     return l
 
+
 @app.get('/dog_pk/{i_k}')
 async def dogs_pk(i_k: int):
     l = list()
