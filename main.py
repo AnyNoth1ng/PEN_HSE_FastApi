@@ -2,6 +2,7 @@ from enum import Enum
 from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
+from datetime import datetime, timedelta, timezone
 app = FastAPI()
 
 
@@ -62,8 +63,16 @@ async def dogs_pk(i_k: int):
             l.append(i)
     return l
 
-@app.post('/post')
+@app.post('/post', response_model= Timestamp)
 def Get_post():
+    tec_id = post_db[-1].id + 1
+    delta = timedelta(hours=3)
+    date_cur = datetime.now(timezone.utc) + delta
+    int_date = int(date_cur.timestamp())
+    l = Timestamp(id = tec_id, timestamp = int_date)
+    return l
+
+
 
 
 
