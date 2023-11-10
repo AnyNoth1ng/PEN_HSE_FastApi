@@ -63,6 +63,9 @@ async def dogs_pk(i_k: int):
             l.append(i)
     return l
 
+@app.post('/post')
+def Get_post():
+
 
 
 
