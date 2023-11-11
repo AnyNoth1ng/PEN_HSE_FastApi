@@ -1,5 +1,5 @@
 from enum import Enum
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from datetime import datetime, timedelta, timezone
 
@@ -78,7 +78,7 @@ def Get_post():
 @app.post('/dog', response_model=Dog)
 def create_dog(dog :Dog):
     if dogs_db.get(dog.pk) == True:
-        return 'pk is already exists'
+        raise HTTPException(status_code=400, detail="pk is already exists")
     else:
         new_dog = dog
         dogs_db[dog.pk]= new_dog
@@ -92,7 +92,7 @@ async def update_info_dog(pk: int, dog: Dog):
         dogs_db[pk] = dog
         return dogs_db[pk]
     else:
-        return 'update is failed'
+        raise HTTPException(status_code=400, detail="update is failed")
 
 
 
