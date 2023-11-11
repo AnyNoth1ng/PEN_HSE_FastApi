@@ -1,10 +1,7 @@
 from enum import Enum
 from fastapi import FastAPI
 from pydantic import BaseModel
-import uvicorn
 from datetime import datetime, timedelta, timezone
-from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
 
 app = FastAPI()
 class DogType(str, Enum):
@@ -98,10 +95,6 @@ async def update_info_dog(pk: int, dog: Dog):
         return 'update is failed'
 
 
-
-
-# if __name__ == "__main__":
-#     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
 

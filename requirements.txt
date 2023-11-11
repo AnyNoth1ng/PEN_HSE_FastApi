@@ -1,4 +1,3 @@
-enum
-fastapi0
+fastapi
 pydantic
 uvicorn
