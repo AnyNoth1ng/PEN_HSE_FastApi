@@ -3,9 +3,10 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
 from datetime import datetime, timedelta, timezone
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
+
 app = FastAPI()
-
-
 class DogType(str, Enum):
     terrier = "terrier"
     bulldog = "bulldog"
@@ -37,32 +38,35 @@ post_db = [
     Timestamp(id=0, timestamp=12),
     Timestamp(id=1, timestamp=10)
 ]
-
+# Реализован путь /
 @app.get('/')
 def root():
     return 'Polyakov Egor'
 
-@app.post('/post')
-def Get_post():
-    return post_db[0]
-
-@app.get('/dog/{kind}')
-def Get_dogs_kind(value: str):
+# Реализовано получение списка собак
+# Реализовано получение собак по типу
+@app.get('/dog/{type}')
+def Get_dogs_kind(type: str):
     l = list()
-    for i in dogs_db.keys():
-        if dogs_db[i].kind == value:
-            l.append(dogs_db[i])
+    if type not in [dog.kind for dog in dogs_db.values()]:
+        l.append(dogs_db)
+    else:
+        for i in dogs_db.keys():
+            if dogs_db[i].kind == type:
+                l.append(dogs_db[i])
     return l
 
-
-@app.get('/dog_pk/{i_k}')
-async def dogs_pk(i_k: int):
+# Реализовано получение собак по id
+@app.get('/dog_pk/{i_d}')
+async def dogs_pk(i_d: int):
     l = list()
     for i in dogs_db.values():
-        if i.pk == i_k:
+        if i.pk == i_d:
             l.append(i)
     return l
 
+
+# Реализован путь /post
 @app.post('/post', response_model= Timestamp)
 def Get_post():
     tec_id = post_db[-1].id + 1
@@ -73,7 +77,31 @@ def Get_post():
     return l
 
 
+# Реализована запись собак
+@app.post('/dog', response_model=Dog)
+def create_dog(dog :Dog):
+    if dogs_db.get(dog.pk) == True:
+        return 'pk is already exists'
+    else:
+        new_dog = dog
+        dogs_db[dog.pk]= new_dog
+        print("Собака успешно добавлена")
+    return new_dog
 
+# Реализовано обновление собаки по id
+@app.patch('/dog/{pk}')
+async def update_info_dog(pk: int, dog: Dog):
+    if pk in dogs_db:
+        dogs_db[pk] = dog
+        return dogs_db[pk]
+    else:
+        return 'update is failed'
+
+
+
+
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
 
